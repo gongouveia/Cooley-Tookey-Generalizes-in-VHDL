@@ -1,8 +1,9 @@
 # Cooley-Tookey-Generalizes-in-VHDL
 Implementation of the CTG in VHDL
 
-main_CTG.vhd  -> codigo principal
-Packages_Util.vhd  -> package com constantes e funcções (dot product, multiplicação e soma de numeros complexos)
+    main_CTG.vhd  -> codigo principal
+    Packages_Util.vhd  -> package com constantes e funcções (dot product, multiplicação e soma de numeros complexos)
+    CTG_TB.vhd  -> ficheiro para o testbench, penso que é asism que se faz, mas não da nenhum output
 
 
 
@@ -22,4 +23,6 @@ Packages_Util.vhd  -> package com constantes e funcções (dot product, multipli
     
     O que me falta fazer e ando a testar:
     -fazer a dft das linhas e das colunas.
-  
+    -verificar time constraints
+    
+ 
