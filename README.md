@@ -34,4 +34,4 @@ começar a inicializar a matriz desta maneira ..... linhas j / colunas j
     -fazer a dft das linhas e das colunas.
     -verificar time constraints
     
- 
+ Realizei códigos para os somadores e multiplicadores com os seus testbenches. os codigos para os produtos vetoriais estão aqui, feitos com signed values  esfixed values para comparar. https://github.com/gongouveia/vectorial-dot-product-a.b
