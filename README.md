@@ -9,6 +9,7 @@ Este documento e importante para saber se as DFT que estou a fazer no meu algori
 
 A imagem RTL_analysis demostram como o dot_product esta sintesizado
     RTL_analysis.png https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/RTL_analysis.png
+    
 A imagem waveform demostram o testbench da DFT de pontos  (confirmei o valor dos twiddle factors, não sera esse o erro)
     waveform_dft.png https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/waveform_dft.png
 
