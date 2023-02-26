@@ -1,3 +1,9 @@
+
+# FOLDER  DFT_theoretical_N_points :folder:
+Tentei implementar ma DFT para 5 pontos, penso que esta bem implementada mas o formato de dados tem algo de errado, o testbench esta feito. 
+Este documento e importanto para saber se as DFT que estou a fazer no meu algoritmo estão corretas.
+
+
 # Cooley-Tookey-Generalizes-in-VHDL
 Implementation of the CTG in VHDL
 
