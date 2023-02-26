@@ -14,13 +14,13 @@ Implementation of the CTG in VHDL
 
 começar a inicializar a matriz desta maneira ..... linhas j / colunas j
 
---  0 | 4 | 8  |  
+ | 0 | 4 | 8  |  
 
---  1 | 5 | 9  |
+ | 1 | 5 | 9  |
 
---  2 | 6 | 10 |
+ | 2 | 6 | 10 |
 
---  3 | 7 | 11 |   
+ | 3 | 7 | 11 |   
 2    Fazer a dft das linhas
 3    multiplicar cada ponto ponto por uma layers de twiddle factors
 4    fazer a dft das colnunas
