@@ -1,8 +1,13 @@
 
-# FOLDER  DFT_theoretical_N_points :folder:
-Tentei implementar ma DFT para 5 pontos, penso que esta bem implementada mas o formato de dados tem algo de errado, o testbench esta feito. 
-Este documento e importanto para saber se as DFT que estou a fazer no meu algoritmo estão corretas.
+# DFT_theoretical_N_points 
 
+Na pasta DFT_theoretical_N_points 
+Tentei implementar uma DFT para 5 pontos, penso que está bem implementada, mas os resulatdos estão errados.
+O testbench esta feito. 
+Este documento e importante para saber se as DFT que estou a fazer no meu algoritmo estão corretas.
+
+
+As imagens RTL_analysis demostram como o dot_product esta sintesizado
 
 # Cooley-Tookey-Generalizes-in-VHDL
 Implementation of the CTG in VHDL
