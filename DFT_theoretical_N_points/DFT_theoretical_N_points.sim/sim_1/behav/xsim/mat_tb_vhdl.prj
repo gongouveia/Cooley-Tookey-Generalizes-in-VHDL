@@ -1,0 +1,8 @@
+# compile vhdl design source files
+vhdl2008 xil_defaultlib  \
+"../../../../DFT_theoretical_N_points.srcs/sources_1/new/package_Util.vhd" \
+"../../../../DFT_theoretical_N_points.srcs/sources_1/new/main.vhd" \
+"../../../../DFT_theoretical_N_points.srcs/sim_1/new/testbench.vhd" \
+
+# Do not sort compile order
+nosort

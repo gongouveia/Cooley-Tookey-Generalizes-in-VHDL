@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sun Feb 26 23:38:05 2023
+# Process ID: 1215022
+# Current directory: /home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.runs/synth_1
+# Command line: vivado -log main.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source main.tcl
+# Log file: /home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.runs/synth_1/main.vds
+# Journal file: /home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.runs/synth_1/vivado.jou
+# Running On: dev5, OS: Linux, CPU Frequency: 1375.801 MHz, CPU Physical cores: 4, Host memory: 16471 MB
+#-----------------------------------------------------------
+source main.tcl -notrace

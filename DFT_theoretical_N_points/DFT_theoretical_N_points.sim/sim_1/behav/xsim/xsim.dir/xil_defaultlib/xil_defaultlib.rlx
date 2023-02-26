@@ -1,0 +1,7 @@
+0.7
+2020.2
+Apr 18 2022
+15:53:03
+/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sim_1/new/testbench.vhd,1677363440,vhdl2008,,,,mat_tb,,,,,,,,
+/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sources_1/new/main.vhd,1677454884,vhdl2008,/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sim_1/new/testbench.vhd,,,main,,,,,,,,
+/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sources_1/new/package_Util.vhd,1677454370,vhdl2008,/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sim_1/new/testbench.vhd;/home/gpaiva/DFT_theoretical_N_points/DFT_theoretical_N_points.srcs/sources_1/new/main.vhd,,,packages_util,,,,,,,,
