@@ -1,4 +1,4 @@
-
+# DFT_theoretical_REAL_tested
 # DFT_theoretical_N_points 
 
 Na pasta DFT_theoretical_N_points 
