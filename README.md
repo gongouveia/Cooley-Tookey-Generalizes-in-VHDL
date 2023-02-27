@@ -1,4 +1,9 @@
 # DFT_theoretical_REAL_tested
+
+
+Neste repositorio esta testada a DFT de 4 pontos, foi usado o package de numeros reais, pelo que não é sintetisavel
+O testbench vai de encontro aos valores reais da DFT
+
 # DFT_theoretical_N_points 
 
 Na pasta DFT_theoretical_N_points 
