@@ -2,15 +2,16 @@
 # DFT_theoretical_N_points 
 
 Na pasta DFT_theoretical_N_points 
-Tentei implementar uma DFT para 5 pontos, penso que está bem implementada, mas os resulatdos estão errados.
+Tentei implementar uma DFT para 5 pontos, penso que está bem implementada, mas os resultados estão errados.
 O testbench esta feito. 
+
 Este documento e importante para saber se as DFT que estou a fazer no meu algoritmo estão corretas.
 
 
-A imagem RTL_analysis demostram como o dot_product esta sintesizado
+A imagem RTL_analysis.png demostram como o dot_product esta sintesizado
     RTL_analysis.png https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/RTL_analysis.png
     
-A imagem waveform demostram o testbench da DFT de pontos  (confirmei o valor dos twiddle factors, não sera esse o erro)
+A imagem waveform.png demostram o testbench da DFT de pontos  (confirmei o valor dos twiddle factors, não sera esse o erro)
     waveform_dft.png https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/waveform_dft.png
 
 
