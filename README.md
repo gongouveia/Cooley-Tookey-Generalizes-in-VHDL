@@ -3,7 +3,7 @@
 
 Neste repositorio esta testada a DFT de 4 pontos, foi usado o package de numeros reais, pelo que não é sintetisavel
 O testbench vai de encontro aos valores reais da DFT
-
+waveform of the DFT: https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/DFT_theoretical_REAL_tested/waveform.png
 # DFT_theoretical_N_points 
 
 Na pasta DFT_theoretical_N_points 
