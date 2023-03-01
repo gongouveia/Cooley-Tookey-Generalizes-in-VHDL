@@ -24,6 +24,7 @@ A imagem waveform.png demostram o testbench da DFT de pontos  (confirmei o valor
 Tyoe of data test, and validation using testbench.
 format of data is 31bits, 12 bits for fractional part. using SIGNED type, twoś complement
 
+https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/DFT_theoretical_REAL_tested/waveform.png
 
 # Cooley-Tookey-Generalizes-in-VHDL
 Implementation of the CTG in VHDL
