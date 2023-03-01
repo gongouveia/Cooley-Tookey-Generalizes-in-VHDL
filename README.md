@@ -19,6 +19,10 @@ A imagem RTL_analysis.png demostram como o dot_product esta sintesizado
 A imagem waveform.png demostram o testbench da DFT de pontos  (confirmei o valor dos twiddle factors, não sera esse o erro)
     waveform_dft.png https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/waveform_dft.png
 
+# 4 point DFT sythsysable VHDL synthesizable
+
+Tyoe of data test, and validation using testbench.
+format of data is 31bits, 12 bits for fractional part. using SIGNED type, twoś complement
 
 
 # Cooley-Tookey-Generalizes-in-VHDL
