@@ -53,7 +53,9 @@ começar a inicializar a matriz desta maneira ..... linhas j / colunas j
  | 2 | 6 | 10 |
 
  | 3 | 7 | 11 |   
-2    Fazer a dft das linhas
+ 
+Falta fazer
+2    Fazer a dft das linhas:check:
 3    multiplicar cada ponto ponto por uma layers de twiddle factors
 4    fazer a dft das colnunas
     
