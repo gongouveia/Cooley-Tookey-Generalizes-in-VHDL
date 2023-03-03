@@ -55,15 +55,10 @@ começar a inicializar a matriz desta maneira ..... linhas j / colunas j
  | 3 | 7 | 11 |   
  
 Falta fazer
-2    Fazer a dft das linhas:check:
-3    multiplicar cada ponto ponto por uma layers de twiddle factors
-4    fazer a dft das colnunas
+    Verificar time constraints
+    Perceber se o testbench está bem
+    Validar resutados
+    Ãdicionar ADC e UART
     
-    
-    
-    
-    O que me falta fazer e ando a testar:
-    -fazer a dft das linhas e das colunas.
-    -verificar time constraints
-    
+
  Realizei códigos para os somadores e multiplicadores com os seus testbenches. os códigos para os produtos vetoriais estão aqui, feitos com signed values  e sfixed values para comparar. https://github.com/gongouveia/vectorial-dot-product-a.b
