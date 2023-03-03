@@ -54,7 +54,8 @@ começar a inicializar a matriz desta maneira ..... linhas j / colunas j
 
  | 3 | 7 | 11 |   
  
-Falta fazer
+Falta fazer:
+
     Verificar time constraints
     Perceber se o testbench está bem
     Validar resutados
