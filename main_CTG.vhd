@@ -34,14 +34,16 @@ ENTITY CTG IS
     Port (
         CLK : IN  STD_LOGIC;
         RESET : IN  STD_LOGIC;           
-        NEW_VALUE :IN STD_LOGIC_VECTOR(11 DOWNTO 0);       -- unsigned (12 bits)    0---3.3V
+        NEW_VALUE :IN signed(11 DOWNTO 0);       -- unsigned (12 bits)    0---3.3V
         OUT_VALUE : OUT STD_LOGIC
+        --OUT_REAL : OUT signed(11 DOWNTO 0);
+        --OUT_IMAG: OUT signed(11 DOWNTO 0)
          );
 END CTG;
 
 
 
-architecture Behavioral of CTG is 
+ARCHITECTURE Behavioral OF CTG IS 
   
     TYPE CTG            IS ( ACQUIRE_VALUES, ROWS_DFT, MULTIPLY_TWIDDLES, COLLUM_DFT, OUT_VALUES);   --estados
     
@@ -64,9 +66,9 @@ architecture Behavioral of CTG is
     
     -- inicialização de valores e 
     -- A craição de duas matrizes em que guardam os dados previnem o eror4 de multiple driving nets
-    SIGNAL initial_matrix : MATRIX := (OTHERS => (OTHERS => ("000000000000000000000000", "000000000000000000000000")));   -- Devo fazer uma matriz para cada estado ou actualizar sempre a mesma matriz? eu tentei a segunda opção mas estava me a dar erros de double assignment
-    signal acquire_matrix : MATRIX := (OTHERS => (OTHERS => ("000000000000000000000000", "000000000000000000000000")));    -- matriz onde estão os valores adquiridos
-    SIGNAL sum_of_factors : Complex_Type := ("000000000000000000000000", "000000000000000000000000");
+    SIGNAL initial_matrix : MATRIX := (OTHERS => (OTHERS => (x"00000000", x"00000000")));   -- Devo fazer uma matriz para cada estado ou actualizar sempre a mesma matriz? eu tentei a segunda opção mas estava me a dar erros de double assignment
+    signal acquire_matrix : MATRIX := (OTHERS => (OTHERS => (x"00000000", x"00000000")));    -- matriz onde estão os valores adquiridos
+    SIGNAL sum_of_factors : Complex_Type :=                 (x"00000000", x"00000000");
     
     
     
@@ -78,7 +80,7 @@ architecture Behavioral of CTG is
     -- variaveis da Finite State Machine
     SIGNAL ACQUIRE_FINAL :   STD_LOGIC := '0';
     SIGNAL OUTPUT_FINAL  :   STD_LOGIC := '0';
-    
+
     
     ----------------------------------------------------------
     ------              Clocks                         -------
@@ -86,12 +88,12 @@ architecture Behavioral of CTG is
     
     SIGNAL clk_acquisition : STD_LOGIC :='0';
     SIGNAL clk_output     : STD_LOGIC :='0';
-    
+  
 
 BEGIN
 
-    PROCESS(CLK) IS                       
-    
+    PROCESS(clk) IS                       
+    Variable state_at: integer := 0;
     BEGIN
     
         IF rising_edge(CLK) THEN
@@ -103,36 +105,41 @@ BEGIN
                 i<=0;
                 j<=0;    
                 State   <= ACQUIRE_VALUES;
-            ELSE                       
+                OUT_VALUE<= '1';
+                ELSE                       
 
                 
-            --FINITE STATE MACHINE
-                CASE State IS                        
-                    --acquire values collumn wise
-                    WHEN ACQUIRE_VALUES => 
-                        IF ACQUIRE_FINAL= '1' THEN                                       
-                             ACQUIRE_FINAL <= '0'; 
-                             State         <= ROWS_DFT; 
-                        END iF;                        
-                    -- Calcula a DFT de cada linha
-                    WHEN ROWS_DFT =>
-                        State <= MULTIPLY_TWIDDLES;                                         
-                    -- Multiplica a matriz anterior pelos twiddle factors    / este passo parece me ter  alogica certa
-                    WHEN MULTIPLY_TWIDDLES =>                      
-                        State <= COLLUM_DFT;                                                                                                                               
-                    --Calcula a DFT de cada coluna
-                    WHEN COLLUM_DFT =>                                          
-                        --OUTPUT_START <= '1';
-                        State <= OUT_VALUES;                    
-                    -- Outputs the values                 
-                    WHEN OUT_VALUES =>   
-                        IF OUTPUT_FINAL = '1' THEN  
-                            State <= ACQUIRE_VALUES; 
-                            OUTPUT_FINAL <= '0';
-                        END iF;
-                  
-                END CASE;
-            END IF;
+                    --FINITE STATE MACHINE
+                        CASE State IS                        
+                            --acquire values collumn wise
+                            WHEN ACQUIRE_VALUES => 
+                                STATE_at := 1;
+                                IF ACQUIRE_FINAL= '1' THEN                                       
+                                     ACQUIRE_FINAL <= '0'; 
+                                     State         <= ROWS_DFT; 
+                                END iF;                        
+                            -- Calcula a DFT de cada linha
+                            WHEN ROWS_DFT =>
+                                 STATE_at := 2;
+                                State <= MULTIPLY_TWIDDLES;                                         
+                            -- Multiplica a matriz anterior pelos twiddle factors   
+                            WHEN MULTIPLY_TWIDDLES =>   
+                                STATE_at := 3;               
+                                State <= COLLUM_DFT;                                                                                                                               
+                            --Calcula a DFT de cada coluna
+                            WHEN COLLUM_DFT =>                                          
+                                --OUTPUT_START <= '1';
+                                State <= OUT_VALUES;                    
+                            -- Outputs the values                 
+                            WHEN OUT_VALUES =>   
+                                IF OUTPUT_FINAL = '1' THEN  
+                                    State <= ACQUIRE_VALUES; 
+                                    OUTPUT_FINAL <= '0';
+                                END iF;
+                          
+                        END CASE;
+                        
+                END IF;
         END if;
     END PROCESS;
     
@@ -150,26 +157,26 @@ BEGIN
     PROCESS(clk) 
     VARIABLE i : integer := 0;
     VARIABLE j : integer := 0;
-    variable acquired_new : std_logic_vector(23 downto 0);
+    variable acquired_new : signed(31 downto 0);
     BEGIN
     IF (rising_edge(clk)) THEN 
         IF(state = ACQUIRE_VALUES) THEN
               --ACQUIRE_FINAL <= '0';
-              IF (i < row_length) THEN
+              IF (i < rows) THEN
               
-                    IF(j  < collumn_length) THEN
+                    IF(j  < collumns) THEN
                         --write your code here..
-                        acquired_new := "000000000000" & NEW_VALUE;
-                        acquire_matrix(i,j)<=  (signed(acquired_new),"000000000000000000000000");      --acquired value (Acquired value,0);                                   
+                        acquired_new := x"00000" & NEW_VALUE;
+                        acquire_matrix(i)(j)<=  (signed(acquired_new),x"00000000");      --acquired value (Acquired value,0);                                   
                         j:=j+1;                                                                                      --increment the pointer 'j' .
                     END IF; 
             
-                    IF(j= collumn_length) THEN
+                    IF(j= collumns) THEN
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
                     END IF;  
                                  
-                    IF(j= collumn_length AND i = row_length) THEN
+                    IF(j= collumns AND i = rows) THEN
                         i := 0;
                         j := 0;
                         ACQUIRE_FINAL <= '1';
@@ -196,28 +203,15 @@ BEGIN
     PROCESS(clk)
     
     VARIABLE auxliary_variable : Complex_Type;
-    
+    VARIABLE auxiliary_collumn : VECTOR_ROW;
+
     BEGIN
              
-        IF(state = ROWS_DFT) THEN
-            -- por cada linha 
-            FOR i IN 0 TO row_length-1 LOOP   
-               -- itera por cada elemento              
-                FOR j IN 0 TO collumn_length-1 LOOP                            
-                --FAZER A DFT DE CADA ACQUIRE_FINAL
-                --USAR A FUNLÂO DE ACQUIRE_FINAL
-                --- AINDA ESTOU A IMPLEMNTAR ESTA FUNÇÂO ACQUIRE_FINAL
-                                        -----------------------------------APENAS PARA CONSEGUIR TESTAR O CODIGO             
-                                     initial_matrix(i,j) <= ComplexMULT(acquire_matrix(i,j), row_matrix_values(i,i));
-                END LOOP;
-            END LOOP ;      
-       END IF;
-  
-
-                                                                                     
+             
+                                                                                       
   --  TESTADO EM PYTHON O QUE EU QUERO FAZER                    x =[[(1+0j), (1+0j), (1+0j)], [(1+0j), (-0.4999999999999998-0.8660254037844387j), (-0.5000000000000004+0.8660254037844384j)], [(1+0j), (-0.5000000000000004+0.8660254037844384j), (-0.4999999999999992-0.8660254037844392j)]]
   --                                                            y = [[1,2,3],[1,2,3]]
-  --                                                            
+  --                                                            DFT = []
   --                                                            for s in range(len(y)):
   --                                                                aux= 0
   --                                                                for i in range(3):
@@ -226,23 +220,43 @@ BEGIN
   --                                                                    for j in range(3):
   --                                                                      aux = aux + x[i][j]*y[s][j]
 --                                                                      print(aux)
+--                                                                     DFT.append(aux)
 --                                                                   print("\n")
-  --                                                                                  
+  --                                                                           
+             
+      
+        IF(state = ROWS_DFT) THEN
+            -- por cada linha 
+            FOR i IN 0 TO rows-1 LOOP   
+               -- itera por cada coluna              
+                FOR j IN 0 TO rows-1 LOOP                            
+                      initial_matrix(j)(i) <= dot_product_row(acquire_matrix(i), row_dft_matrix_values(i));
+                END LOOP;
+            END LOOP ;      
+       END IF;
+  
+
+                  
     
         IF(state = MULTIPLY_TWIDDLES) THEN
-            FOR i IN 0 TO row_length-1 LOOP                       
-                FOR j IN 0 TO collumn_length-1 LOOP                      
+            FOR i IN 0 TO rows-1 LOOP                       
+                FOR j IN 0 TO collumns-1 LOOP                      
                      --This is being done in parallel
-                    initial_matrix(i,j) <=  ComplexMULT(initial_matrix(i,j),twiddle_matrix(i,j));
+                    initial_matrix(i)(j)<=  ComplexMULT(initial_matrix(i)(j),twiddle_matrix(i)(j));
                 END LOOP;
             END LOOP ;      
         END IF;  
         
          
         IF(state = COLLUM_DFT) THEN
-            FOR i IN 0 TO row_length-1 LOOP                       
-                FOR j IN 0 TO collumn_length-1 LOOP              
-                    initial_matrix(i,j) <= ComplexSUM(initial_matrix(i,j),  collumn_matrix_values(j,j));
+           -- itera por cada coluna
+            FOR i IN 0 TO collumns-1 LOOP 
+            
+                -- por cada linha                      
+                FOR j IN 0 TO rows-1 LOOP   
+                           -- extrai os valores de uma coluna
+                         auxiliary_collumn(j)  := acquire_matrix(j)(i);                                
+                         initial_matrix(j)(i)  <= dot_product_collumn(auxiliary_collumn, collumn_dft_matrix_values(j));
                 END LOOP;
             END LOOP ;      
         END IF;
@@ -266,18 +280,18 @@ BEGIN
 
             IF (rising_edge(clk)) THEN 
                 --OUTPUT_FINAL <= '0';
-                IF (i < row_length) THEN
-                    IF(j  < collumn_length) THEN        
+                IF (i < rows) THEN
+                    IF(j  < collumns) THEN        
                         --write your code architecture                              
-                         OUT_VALUE <= initial_matrix(i,j).r(9);   
+                         OUT_VALUE <= initial_matrix(i)(j).r(9);   
                          --juntar output real & complex de forma a fazer  
                     END IF;
-                    IF(j= collumn_length) THEN
+                    IF(j= collumns) THEN
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
                     END IF;
                     
-                     IF(j= collumn_length AND i = row_length) THEN
+                     IF(j= collumns AND i = rows) THEN
                         i := 0;
                         j := 0;
                         OUTPUT_FINAL <= '1';
