@@ -26,7 +26,7 @@ format of data is 31bits, 12 bits for fractional part. using SIGNED type, twoś 
 
 https://github.com/gongouveia/Cooley-Tookey-Generalizes-in-VHDL/blob/main/DFT_theoretical_REAL_tested/waveform.png
 
-# Cooley-Tookey-Generalizes-in-VHDL
+#  DFT_theoretical_REAL_tested 
 Implementation of the CTG in VHDL
 
 Still under development :construction:
@@ -59,7 +59,7 @@ Falta fazer:
     Verificar time constraints
     Perceber se o testbench está bem
     Validar resutados
-    Ãdicionar ADC e UART
     
 
- Realizei códigos para os somadores e multiplicadores com os seus testbenches. os códigos para os produtos vetoriais estão aqui, feitos com signed values  e sfixed values para comparar. https://github.com/gongouveia/vectorial-dot-product-a.b
+ Realizei códigos para os somadores e multiplicadores com os seus testbenches, os dados foram validados.
+ Os códigos para os dot products foram testados. https://github.com/gongouveia/vectorial-dot-product-a.b
