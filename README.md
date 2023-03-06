@@ -31,12 +31,11 @@ Implementation of the CTG in VHDL
 
 Still under development :construction:
 
-    main_CTG.vhd  -> codigo principal
-    Packages_Util.vhd  -> package com constantes e funcções (dot product, multiplicação e soma de 
-    numeros complexos)
-    CTG_TB.vhd  -> ficheiro para o testbench, penso que é asism que se faz, mas não da nenhum output
 
-
+    FOLDER: COOLEY_TOOKEY_GENRALIZED_
+    - Contem os ficheiros para a package de funções e tipos
+    - Contem o codigo do main (adquirir, processa e envia os dados)
+    - Contem o codigo com o testbench do algoritmo
 
 
 1
