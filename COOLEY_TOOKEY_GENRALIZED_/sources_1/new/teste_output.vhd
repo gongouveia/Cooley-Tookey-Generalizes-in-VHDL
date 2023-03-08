@@ -51,18 +51,19 @@ begin
                         j := 0;                        
                     END IF;
                 END IF;   
-    END IF;   
     
     
-    IF (rising_edge(clk)) THEN 
-    counter := counter +1;
-    if (counter = 12) then
-        counter := 0;
-        OUTPUT_FINAL <= '1';
-    else 
-        OUTPUT_FINAL <= '0';
-    end if;
-    end if;      
+            counter := counter +1;
+            if (counter = 12) then
+                counter := 0;
+                OUTPUT_FINAL <= '1';
+            else 
+                OUTPUT_FINAL <= '0';
+                
+            end if;
+        END IF;   
+        
+            
     END PROCESS;
     
     

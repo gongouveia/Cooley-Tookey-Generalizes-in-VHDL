@@ -133,14 +133,24 @@ package Packages_Util is
     FUNCTION ComplexMult(ValueA, ValueB: Complex_Type) RETURN Complex_Type IS
         
         VARIABLE Result: Complex_Type;
+        VARIABLE Natural_result_first : signed(63 downto 0);
+        VARIABLE Complex_result_first : signed(63 downto 0);
+        VARIABLE Natural_result_second : signed(63 downto 0);
+        VARIABLE Complex_result_second : signed(63 downto 0);   
         VARIABLE Natural_result : signed(63 downto 0);
-        VARIABLE Complex_result : signed(63 downto 0);
-    
+        VARIABLE Complex_result : signed(63 downto 0); 
     BEGIN
     
-        Natural_result := signed(ValueA.r) *signed(ValueB.r)/4096 - signed(ValueA.i)*signed(ValueB.i)/4096;
-        Complex_result := signed(ValueA.r) *signed(ValueB.i)/4096 + signed(ValueA.i)*signed(ValueB.r)/4096;
-    
+        Natural_result_first := signed(ValueA.r) *signed(ValueB.r)/4096 ;
+        Complex_result_first := signed(ValueA.r) *signed(ValueB.i)/4096 ;
+   
+        Natural_result_second :=  signed(ValueA.i)*signed(ValueB.i)/4096;
+        Complex_result_second :=  signed(ValueA.i)*signed(ValueB.r)/4096;
+     
+     
+        Natural_result := Natural_result_first- Natural_result_second;
+        Complex_result := Complex_result_first+ Complex_result_second;
+     
         Result.r := Natural_result(31 downto 0);
         Result.i := Complex_result(31 downto 0);
     
