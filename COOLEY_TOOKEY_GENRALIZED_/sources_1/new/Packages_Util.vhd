@@ -36,6 +36,8 @@ package Packages_Util is
     TYPE VECTOR_ROW     IS ARRAY (0 to rows-1)     OF Complex_Type; 
     
     TYPE MATRIX         IS ARRAY (0 TO rows-1) OF VECTOR_COLLUMN;
+    TYPE MATRIX_transpose  IS ARRAY (0 TO collumns-1) OF VECTOR_ROW;
+
     TYPE ROW_MATRIX     IS ARRAY (0 TO rows-1) OF VECTOR_ROW;
     TYPE COLLUMN_MATRIX IS ARRAY (0 TO collumns-1) OF VECTOR_COLLUMN;
 
@@ -58,14 +60,17 @@ package Packages_Util is
     (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
     ((x"00000fff",x"00000000"),(x"fffff801",x"fffff226"),(x"fffff800",x"00000dda")),
     ((x"00000fff",x"00000000"),(x"fffff800",x"00000dda"),(x"fffff801",x"fffff226")));
-    
+
+  
          -- VAlores para o passo de DFT de colunas
-    CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
-     (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
-    ((x"00000fff",x"00000000"),(x"00000000",x"00000000"),(x"fffff001",x"00000000"),(x"00000000",x"00000000")),
-    ((x"00000fff",x"00000000"),(x"fffff001",x"00000000"),(x"00000fff",x"00000000"),(x"fffff001",x"00000000")),
-    ((x"00000fff",x"00000000"),(x"00000000",x"00000000"),(x"fffff001",x"00000000"),(x"00000000",x"00000000")));
-        
+    CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=      
+      (((x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000")),
+    ((x"00001000",x"00000000"),(x"00000000",x"fffff000"),(x"fffff000",x"00000000"),(x"00000000",x"00001000")),
+    ((x"00001000",x"00000000"),(x"fffff000",x"00000000"),(x"00001000",x"00000000"),(x"fffff000",x"00000000")),
+    ((x"00001000",x"00000000"),(x"00000000",x"00001000"),(x"fffff000",x"00000000"),(x"00000000",x"fffff000"))); 
+    
+    
+    
     -------------------------------------------------------
     ------        Deslaração de Funções             -------
     -------------------------------------------------------
@@ -91,6 +96,11 @@ package Packages_Util is
     FUNCTION dot_product_collumn(a : VECTOR_ROW; b:VECTOR_ROW) return complex_type;
     ----------------------------------------------
 
+
+    ----------------------------------------------
+    FUNCTION transpose(a : matrix) return MATRIX_transpose;
+    ----------------------------------------------
+
 	
       end package Packages_Util;
        
@@ -103,11 +113,16 @@ package Packages_Util is
 	FUNCTION ComplexSum (ValueA, ValueB: Complex_Type) RETURN Complex_Type IS
 		
 		VARIABLE Result : Complex_Type;
-		
+        VARIABLE Natural_result : signed(31 downto 0);
+        VARIABLE Complex_result : signed(31 downto 0);
+    
 	BEGIN
 	
-		Result.r := ValueA.r + ValueB.r;
-		Result.i := ValueA.i + ValueB.i;
+		Natural_result := ValueA.r + ValueB.r;
+		Complex_result := ValueA.i + ValueB.i;
+		
+        Result.r := Natural_result(31 downto 0);
+        Result.i := Complex_result(31 downto 0);
 		RETURN Result;
 		
 	END ComplexSum;
@@ -123,7 +138,7 @@ package Packages_Util is
     
     BEGIN
     
-        Natural_result := signed(ValueA.r) *signed(ValueB.r)/4096 - signed(ValueA.r)*signed(ValueB.i)/4096;
+        Natural_result := signed(ValueA.r) *signed(ValueB.r)/4096 - signed(ValueA.i)*signed(ValueB.i)/4096;
         Complex_result := signed(ValueA.r) *signed(ValueB.i)/4096 + signed(ValueA.i)*signed(ValueB.r)/4096;
     
         Result.r := Natural_result(31 downto 0);
@@ -137,7 +152,7 @@ package Packages_Util is
 	-- calcula a soma dos produtos pontoa  ponto 
     FUNCTION dot_product_row(a : VECTOR_COLLUMN; b:VECTOR_COLLUMN) return complex_type is
         VARIABLE prod : VECTOR_COLLUMN := (others => (others => x"00000000"));
-        VARIABLE sum_of_prod : complex_type  :=             (x"00000000",x"00000000");
+        VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
         BEGIN
         
             -- makes the product of the factors
@@ -157,7 +172,7 @@ package Packages_Util is
         
     FUNCTION dot_product_collumn(a : VECTOR_ROW; b:VECTOR_ROW) return complex_type is
     VARIABLE prod : VECTOR_ROW := (others => (others => x"00000000"));
-    VARIABLE sum_of_prod : complex_type  :=             (x"00000000",x"00000000");
+    VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
     BEGIN
     
         -- makes the product of the factors
@@ -175,6 +190,20 @@ package Packages_Util is
     END dot_product_collumn;
     
     
+    
+    -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NÂO TESTADO
+    FUNCTION transpose(a : matrix) return MATRIX_transpose is
+    VARIABLE transposed_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
+    
+    begin
+        for i in 0 to rows-1 loop --(number of elements in the first matrix - 1)
+            for j in 0 to collumns-1 loop --(number of elements in the first matrix - 1)
+                transposed_matrix(j)(i) := a(i)(j);
+            end loop;
+        end loop;
+        return transposed_matrix;
+    end function;
+ 
     
 END package body Packages_Util;
 
