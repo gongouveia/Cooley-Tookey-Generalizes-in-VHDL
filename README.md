@@ -55,9 +55,9 @@ começar a inicializar a matriz desta maneira ..... linhas j / colunas j
  
 Falta fazer:
 
-    Verificar time constraints
-    Perceber se o testbench está bem
-    Validar resutados
+    Verificar time constraints.
+    Validar testbench do main.
+    Validar resutados.
     
 
  Realizei códigos para os somadores e multiplicadores com os seus testbenches, os dados foram validados.
