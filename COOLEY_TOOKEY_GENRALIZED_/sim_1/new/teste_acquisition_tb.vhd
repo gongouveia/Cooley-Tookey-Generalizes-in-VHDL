@@ -45,15 +45,15 @@ architecture Behavioral of teste_acquisition_tb is
 signal CLK :  STD_LOGIC := '0';
 signal acquire_matrix   : MATRIX   := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
 signal reset :  STD_LOGIC := '0';
-signal acquire :  STD_LOGIC := '0';
-signal NEW_VALUE : STD_LOGIC_VECTOR(11 DOWNTO 0); 
+signal ACQUIRE_FINAL :  STD_LOGIC := '0';
+signal NEW_VALUE : STD_LOGIC_VECTOR(11 DOWNTO 0) := x"000" ; 
 
 
 constant clk_period   : time       := 20 ns;
 
 begin
 
-uut: entity work.teste_acquisition PORT MAP (clk,reset, new_value,acquire_matrix, ACQUIRE );   
+uut: entity work.teste_acquisition PORT MAP (reset, clk, new_value,acquire_matrix, ACQUIRE_FINAL );   
 
     clk_process :process
     begin
@@ -67,6 +67,33 @@ uut: entity work.teste_acquisition PORT MAP (clk,reset, new_value,acquire_matrix
       -- Stimulus process
     stim_proc: process
     begin
+         reset <= '1';
+        NEW_VALUE <= x"000";
+        wait for clk_period ;    
+        NEW_VALUE <= x"001";
+        wait for clk_period ;    
+        NEW_VALUE <= x"002";
+        wait for clk_period ;    
+        NEW_VALUE <= x"003";
+        wait for clk_period ;    
+        NEW_VALUE <= x"004";
+        wait for clk_period ;    
+        NEW_VALUE <= x"005";
+        wait for clk_period ;    
+        NEW_VALUE <= x"006";
+        reset <= '0';
+        wait for clk_period ;    
+        NEW_VALUE <= x"007";
+        wait for clk_period ;    
+        NEW_VALUE <= x"008";
+        wait for clk_period ;    
+        NEW_VALUE <= x"009";
+        wait for clk_period ;    
+        NEW_VALUE <= x"00a";
+        wait for clk_period ;    
+        NEW_VALUE <= x"00b";
+        wait for clk_period ;    
+         NEW_VALUE <= x"00c";
         NEW_VALUE <= x"000";
         wait for clk_period ;    
         NEW_VALUE <= x"001";
@@ -91,7 +118,7 @@ uut: entity work.teste_acquisition PORT MAP (clk,reset, new_value,acquire_matrix
         wait for clk_period ;    
         NEW_VALUE <= x"00b";
         wait for clk_period ;    
-         NEW_VALUE <= x"00c";
+        NEW_VALUE <= x"00c";        
         wait for clk_period ;    
         wait;
     end process; 

@@ -44,15 +44,17 @@ architecture Behavioral of teste_output_tb is
 
 signal CLK :  STD_LOGIC := '0';
 signal acquire_matrix   : MATRIX_transpose   := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
-signal OUT_VALUE_REAL : signed(31 downto 0) := x"00000000";
-signal OUT_VALUE_IMAG : signed(31 downto 0) := x"00000000";
-signal OUTPUT_FINAL :  STD_LOGIC := '0';
+signal OUT_VALUE_REAL : SIGNED(31 downto 0) := x"00000000";
+signal OUT_VALUE_IMAG : SIGNED(31 downto 0) := x"00000000";
+signal OUTPUT_FINAL :   STD_LOGIC := '0';
+signal ACQUIRE_FINAL :   STD_LOGIC := '0';
+signal RESET :   STD_LOGIC := '0';
 
 constant clk_period   : time       := 20 ns;
 
 begin
 
-uut: entity work.teste_output PORT MAP (CLK,OUT_VALUE_REAL, OUT_VALUE_IMAG, acquire_matrix, OUTPUT_FINAL );   
+uut: entity work.teste_output PORT MAP (RESET, CLK,OUT_VALUE_REAL, OUT_VALUE_IMAG, acquire_matrix, OUTPUT_FINAL );   
 
     clk_process :process
     begin
@@ -66,6 +68,7 @@ uut: entity work.teste_output PORT MAP (CLK,OUT_VALUE_REAL, OUT_VALUE_IMAG, acqu
       -- Stimulus process
     stim_proc: process
     begin
+        reset <= '1';
         acquire_matrix <=
         (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000")),
         ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000")),
@@ -81,7 +84,8 @@ uut: entity work.teste_output PORT MAP (CLK,OUT_VALUE_REAL, OUT_VALUE_IMAG, acqu
         wait for clk_period ;        
     
         wait for clk_period ;        
-    
+         reset <= '0';
+   
         wait for clk_period ;        
     
         wait for clk_period ;        

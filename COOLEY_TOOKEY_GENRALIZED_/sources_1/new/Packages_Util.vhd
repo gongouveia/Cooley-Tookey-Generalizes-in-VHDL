@@ -201,7 +201,7 @@ package Packages_Util is
     
     
     
-    -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX NÂO TESTADO
+    -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TESTADO
     FUNCTION transpose(a : matrix) return MATRIX_transpose is
     VARIABLE transposed_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
     

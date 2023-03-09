@@ -9,7 +9,8 @@ use work.Packages_Util.all;
 
 entity teste_output is
     Port (
-        CLK : IN  STD_LOGIC;
+        RESET : IN STD_LOGIC;
+        CLK :   IN  STD_LOGIC;
         OUT_VALUE_REAL:out signed(31 DOWNTO 0); 
         OUT_VALUE_IMAG :out signed(31 DOWNTO 0); 
         acquire_matrix : in MATRIX_transpose;
@@ -32,6 +33,17 @@ begin
     BEGIN        
 
             IF (rising_edge(clk)) THEN 
+                if reset = '1' then
+                    i := 0;
+                    j := 0;
+                    counter := 0;
+                    OUT_VALUE_REAL <= x"00000000"; 
+                    OUT_VALUE_IMAG <= x"00000000"; 
+                    OUTPUT_FINAL <= '0';
+
+                    
+            else            
+            
                 --OUTPUT_FINAL <= '0';
                 IF (i < collumns) THEN
                     IF(j  < rows) THEN        
@@ -63,7 +75,7 @@ begin
             end if;
         END IF;   
         
-            
+    END IF;   
     END PROCESS;
     
     

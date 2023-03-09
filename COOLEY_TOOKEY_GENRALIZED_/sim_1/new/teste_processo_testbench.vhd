@@ -40,10 +40,11 @@ SIGNAL   twiddle_matrix_values :  MATRIX  := (OTHERS => (OTHERS => (x"00000000",
 signal ALGO_FINAL : std_logic := '0';
 signal process_counter : integer := 0;
 constant clk_period      : time    := 20 ns;
+signal reset : std_logic := '0';
 
 begin
 
-uut: entity work.teste_processo PORT MAP (clk,acquire_matrix, out_matrix,twiddle_matrix_values,initial_matrix,ALGO_FINAL , process_counter);   
+uut: entity work.teste_processo PORT MAP (reset,clk,acquire_matrix, out_matrix,twiddle_matrix_values,initial_matrix,ALGO_FINAL , process_counter);   
 
 
 clk_process :process
@@ -56,15 +57,30 @@ clk_process :process
     
       -- Stimulus process
     stim_proc: process
-    begin
-        --first set of inputs..
-        acquire_matrix <=    (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
+    begin         
+          reset <= '1';
+
+           acquire_matrix <=    (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
                              ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000" )),
-                             ((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000" ))
-                            );
+                             ((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")));
+        wait for clk_period ;
+            reset <= '0';
+
+        --first set of inputs..
+       
         wait for clk_period ;        --second set of inputs can be given here and so on.
+         
         wait for clk_period ;
         wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+        wait for clk_period ;
+
+        --reset <= '1';
         wait;
     end process; 
     

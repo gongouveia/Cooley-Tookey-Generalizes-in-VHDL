@@ -9,8 +9,8 @@ use work.Packages_Util.all;
 
 entity teste_acquisition is
     Port (
+        RESET : IN std_logic;
         CLK : IN  STD_LOGIC;
-        RESET : IN  STD_LOGIC;           
         NEW_VALUE :IN STD_LOGIC_VECTOR(11 DOWNTO 0); 
         acquire_matrix : out MATRIX;
         ACQUIRE_FINAL : out std_logic
@@ -30,6 +30,17 @@ begin
     VARIABLE counter : integer := 0;
     BEGIN
     IF (rising_edge(clk)) THEN 
+    
+    
+    if reset = '1' then 
+        i := 0;
+        j := 0;
+        counter := 0;
+        acquire_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
+        ACQUIRE_FINAL <= '0';
+        
+    
+    else
               IF (i < collumns) THEN
               
                     IF(j  <= rows) THEN
@@ -50,18 +61,17 @@ begin
                         j := 0;                   
                     END IF;                                  
             END IF; 
-    END IF;    
     
-    IF (rising_edge(clk)) THEN 
-        counter := counter +1;
-        if (counter = 12) then
-            counter := 0;
-            ACQUIRE_FINAL <= '1';
-        else 
-            ACQUIRE_FINAL <= '0';
-        end if;
+            counter := counter +1;
+            if (counter = 12) then
+                counter := 0;
+                ACQUIRE_FINAL <= '1';
+            else 
+                ACQUIRE_FINAL <= '0';
+            end if;
     end if;
- 
+    
+    end if;
     END PROCESS;
  
 

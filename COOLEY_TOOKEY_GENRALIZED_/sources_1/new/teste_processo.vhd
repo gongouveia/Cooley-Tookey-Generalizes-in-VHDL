@@ -8,6 +8,7 @@ use work.Packages_Util.all;
 
 entity teste_processo is
     Port (
+        reset : IN STD_LOGIC;
         CLK : IN  STD_LOGIC;
         acquire_matrix :IN MATRIX;      -- unsigned (12 bits)    0---3.3V
         out_matrix : inout MATRIX_transpose;
@@ -31,7 +32,12 @@ begin
     BEGIN
     
         IF rising_edge(CLK) THEN
-                    --FINITE STATE MACHINE
+                    if reset = '1' then
+                        state <= MULTIPLY_TWIDDLES;
+                        process_counter <= 1;   
+    
+                    else
+        
                    CASE State IS                        
                                                 
                             -- Calcula a DFT de cada linha
@@ -55,7 +61,8 @@ begin
                                 State <= ROWS_DFT;
                                process_counter <= 4;                                       
                      END CASE;  
-        END if;
+        END IF;
+        END IF;
     END PROCESS;
     
 
@@ -76,6 +83,19 @@ begin
     BEGIN                                                             
       
         IF rising_edge(clk) then
+        
+        if reset = '1' then
+            counter := 0;
+            auxiliary_collumn := (OTHERS => (OTHERS => ( x"00000000"))); 
+            auxiliary_row := (OTHERS => (OTHERS => ( x"00000000"))); 
+            AUX_collumn_from_acquire_matrix := (OTHERS => (OTHERS => ( x"00000000"))); 
+            initial_matrix <= acquire_matrix;
+            out_matrix <=  (OTHERS => (OTHERS => (x"00000000", x"00000000")));
+            ALGO_FINAL <= '0';
+            
+        else
+        
+        
         IF(state = ROWS_DFT) THEN
             FOR i IN 0 TO rows-1 LOOP   
                 FOR j IN 0 TO collumns-1 LOOP  
@@ -124,7 +144,6 @@ begin
         
         
         
-        IF (rising_edge(clk)) THEN 
         counter := counter +1;
         if (counter = 4) then
             counter := 0;
@@ -132,9 +151,8 @@ begin
         else 
             ALGO_FINAL <= '0';
         end if;
-        end if;     
         
-        
+        end if;
          
         END PROCESS; 
         

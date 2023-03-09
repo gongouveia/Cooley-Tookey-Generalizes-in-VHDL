@@ -13,8 +13,10 @@ architecture bench of CTG_tb is
           CLK : IN  STD_LOGIC;
           RESET : IN  STD_LOGIC;           
           NEW_VALUE :IN STD_LOGIC_VECTOR(11 DOWNTO 0);
-          OUT_VALUE : OUT STD_LOGIC
+          OUT_VALUE : OUT STD_LOGIC;
           --STATE_at : out INTEGER
+          ACQUIRE_FINAL : OUT STD_LOGIC;
+          OUTPUT_FINAL : OUT STD_LOGIC
 
            );
   end component;
@@ -24,22 +26,26 @@ architecture bench of CTG_tb is
   signal NEW_VALUE: STD_LOGIC_VECTOR(11 DOWNTO 0);
   signal OUT_VALUE: STD_LOGIC := '1';
   constant clock_period: time := 10 ns;
+  signal ACQUIRE_FINAL: STD_LOGIC := '0';
+  signal OUTPUT_FINAL: STD_LOGIC := '0';
 
 begin
 
   uut: CTG port map ( CLK       => CLK,
                       RESET     => RESET,
                       NEW_VALUE => NEW_VALUE,
-                      OUT_VALUE => OUT_VALUE
+                      OUT_VALUE => OUT_VALUE,
+                      ACQUIRE_FINAL => ACQUIRE_FINAL,
+                      OUTPUT_FINAL => OUTPUT_FINAL
                      );
 
   stimulus: process
   begin
-       RESET <= '0';
-       wait for 3*clock_period;
-    -- Put initialisation code here
        RESET <= '1';
+    -- Put initialisation code here
        wait for clock_period;
+       RESET <= '0';
+   
        NEW_VALUE <=  "000000000001";
        wait for clock_period;
        NEW_VALUE <=  "000001000011";
@@ -50,8 +56,6 @@ begin
        wait for clock_period;
        NEW_VALUE <=  "000000000001";
        wait for clock_period;
-      RESET <= '0';
-
        NEW_VALUE <=  "000000000011";
        wait for clock_period;
        NEW_VALUE <=  "000000000111";

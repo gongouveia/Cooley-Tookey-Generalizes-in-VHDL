@@ -13,9 +13,10 @@ ENTITY CTG IS
         CLK : IN  STD_LOGIC;
         RESET : IN  STD_LOGIC;           
         NEW_VALUE :IN STD_LOGIC_VECTOR(11 DOWNTO 0);       -- unsigned (12 bits)    0---3.3V
-        OUT_VALUE : OUT STD_LOGIC
-
-         );
+        OUT_VALUE : OUT STD_LOGIC;
+        ACQUIRE_FINAL : OUT STD_LOGIC;
+        OUTPUT_FINAL : OUT STD_LOGIC
+        );
 END CTG;
 
 
@@ -31,11 +32,7 @@ ARCHITECTURE Behavioral OF CTG IS
     TYPE CTG            IS ( ACQUIRE_VALUES, ROWS_DFT, MULTIPLY_TWIDDLES, TRANSPOSE_step, COLLUM_DFT, OUT_VALUES); 
 
     -- variaveis da Finite State Machine
-    SIGNAL ACQUIRE_FINAL :   STD_LOGIC := '0';
-    SIGNAL OUTPUT_FINAL  :   STD_LOGIC := '0';
-
-
-
+    --SIGNAL OUTPUT_FINAL  :   STD_LOGIC := '0';
 
     --  Fazer a FFT de N = 12 , N é composito em 12=3*4
     --  0 | 4 | 8  |    começar a inicializar a matriz desta maneira ..... linhas j / colunas j
@@ -77,16 +74,15 @@ ARCHITECTURE Behavioral OF CTG IS
 BEGIN
 
     PROCESS(clk) IS                       
-    Variable state_at: integer := 0;
     BEGIN
 
         IF rising_edge(CLK) THEN
 
         -- Reset values with switch
             IF RESET = '0' THEN    
-                ACQUIRE_FINAL <= '0';  
-                OUTPUT_FINAL  <= '0';        
                 State   <= ACQUIRE_VALUES;
+                OUTPUT_FINAL <= '0';
+                ACQUIRE_FINAL <= '0';
 
                 ELSE                       
 
