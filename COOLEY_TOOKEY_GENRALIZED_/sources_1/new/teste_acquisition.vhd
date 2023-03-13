@@ -51,12 +51,12 @@ begin
                                                                                                                        --increment the pointer 'j' .
                     END IF; 
             
-                    IF(j= rows) THEN
+                    IF(j= rows-1) THEN
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
                     END IF;  
                                  
-                    IF ((j= rows) AND (i = collumns)) THEN
+                    IF ((j= rows-1) AND (i = collumns-1)) THEN
                         i := 0;
                         j := 0;                   
                     END IF;                                  

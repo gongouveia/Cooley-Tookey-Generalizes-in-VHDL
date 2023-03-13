@@ -33,27 +33,19 @@ begin
     BEGIN        
 
             IF (rising_edge(clk)) THEN 
-                if reset = '1' then
-                    i := 0;
-                    j := 0;
-                    counter := 0;
-                    OUT_VALUE_REAL <= x"00000000"; 
-                    OUT_VALUE_IMAG <= x"00000000"; 
-                    OUTPUT_FINAL <= '0';
-
+              
                     
-            else            
-            
+        
                 --OUTPUT_FINAL <= '0';
-                IF (i < collumns) THEN
-                    IF(j  < rows) THEN        
+                IF (i < rows) THEN
+                    IF(j  < collumns) THEN        
                         --write your code architecture                              
-                         OUT_VALUE_REAL <= acquire_matrix(i)(j).r; 
-                         OUT_VALUE_IMAG <= acquire_matrix(i)(j).i; 
+                         OUT_VALUE_REAL <= acquire_matrix(j)(i).r; 
+                         OUT_VALUE_IMAG <= acquire_matrix(j)(i).i; 
                          j := j+1;
                          --juntar output real & complex de forma a fazer  
                     END IF;
-                    IF(j= rows) THEN
+                    IF(j = collumns) THEN
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
                     END IF;
@@ -75,7 +67,6 @@ begin
             end if;
         END IF;   
         
-    END IF;   
     END PROCESS;
     
     

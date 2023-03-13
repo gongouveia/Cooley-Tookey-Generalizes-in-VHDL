@@ -68,12 +68,11 @@ uut: entity work.teste_output PORT MAP (RESET, CLK,OUT_VALUE_REAL, OUT_VALUE_IMA
       -- Stimulus process
     stim_proc: process
     begin
-        reset <= '1';
         acquire_matrix <=
-        (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000")),
-        ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000")),
-        ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000")),
-        ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000ff0",x"00000000"))
+        (((x"00000001",x"0000000c"),(x"00000005",x"00000008"),(x"00000009",x"00000004")),
+        ((x"00000002",x"0000000b"),(x"00000006",x"00000007"),(x"0000000a",x"00000003")),
+        ((x"00000003",x"0000000a"),(x"00000007",x"00000006"),(x"0000000b",x"00000002")),
+        ((x"00000004",x"00000009"),(x"00000008",x"00000005"),(x"0000000c",x"00000001"))
         );
         
     
@@ -84,7 +83,6 @@ uut: entity work.teste_output PORT MAP (RESET, CLK,OUT_VALUE_REAL, OUT_VALUE_IMA
         wait for clk_period ;        
     
         wait for clk_period ;        
-         reset <= '0';
    
         wait for clk_period ;        
     

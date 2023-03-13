@@ -58,7 +58,7 @@ clk_process :process
       -- Stimulus process
     stim_proc: process
     begin         
-          reset <= '1';
+            reset <= '0';
 
            acquire_matrix <=    (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
                              ((x"0000ffff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000" )),
@@ -78,8 +78,10 @@ clk_process :process
         wait for clk_period ;
         wait for clk_period ;
         wait for clk_period ;
-        wait for clk_period ;
-
+        wait for 3*clk_period ; 
+        reset<= '1';
+ 
+        wait for 3*clk_period ;  
         --reset <= '1';
         wait;
     end process; 
