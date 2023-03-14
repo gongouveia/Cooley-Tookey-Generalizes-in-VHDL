@@ -10,19 +10,16 @@ use work.Packages_Util.all;
 ENTITY CTG IS
     Port (
         CLK : IN  STD_LOGIC;
-        --RESET : IN  STD_LOGIC;           
-        NEW_VALUE :IN STD_LOGIC_VECTOR(11 DOWNTO 0);       -- unsigned (12 bits)    0---3.3V
+        RESET : IN  STD_LOGIC;           
+        NEW_VALUE : IN STD_LOGIC_VECTOR(11 DOWNTO 0);       -- unsigned (12 bits)    0---3.3V
         OUT_VALUE : OUT STD_LOGIC;
-        ACQUIRE_FINAL : OUT STD_LOGIC;
-        OUTPUT_FINAL : OUT STD_LOGIC;
-        ALGO_FINAL : OUT STD_LOGIC;
         acquire_matrix : OUT MATRIX;
 
         out_matrix : OUT MATRIX_transpose;
         state_at : out  integer;
-        OUT_VALUE_REAL: out signed(31 DOWNTO 0); 
-        OUT_VALUE_IMAG : out signed(31 DOWNTO 0);
-        counter_total : out INTEGER
+        OUT_VALUE_REAL: OUT signed(31 DOWNTO 0); 
+        OUT_VALUE_IMAG : OUT SIGNED(31 DOWNTO 0);
+        counter_total : OUT INTEGER
         
         );
 END CTG;
@@ -36,8 +33,8 @@ ARCHITECTURE Behavioral OF CTG IS
     ------               FSM                            -------
     -----------------------------------------------------------
 
-    TYPE CTG  IS (  ROWS_DFT, MULTIPLY_TWIDDLES,TRANSPOSE_step, COLLUM_DFT); 
-    SIGNAL state : CTG := ROWS_DFT;  --estado signal
+    TYPE CTG  IS ( ACQUIRE_VALUES , ROWS_DFT, MULTIPLY_TWIDDLES,TRANSPOSE_step, COLLUM_DFT, OUTPUT_VALUES); 
+    SIGNAL state : CTG := ACQUIRE_VALUES;  --estado signal
 
 
 
@@ -45,12 +42,8 @@ ARCHITECTURE Behavioral OF CTG IS
     ------          Declaração de sinais                -------
     -----------------------------------------------------------
 
-    -- inicialização de valores e 
-    -- A craição de duas matrizes em que guardam os dados previnem o eror4 de multiple driving nets
     SIGNAL initial_matrix : MATRIX := (OTHERS => (OTHERS => (x"00000000", x"00000000")));   -- Devo fazer uma matriz para cada estado ou actualizar sempre a mesma matriz? eu tentei a segunda opção mas estava me a dar erros de double assignment
-    --SIGNAL acquire_matrix : MATRIX := (OTHERS => (OTHERS => (x"00000000", x"00000000")));    -- matriz onde estão os valores adquiridos
     SIGNAL sum_of_factors : Complex_Type := (x"00000000", x"00000000");
-    --SIGNAL out_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
 
 
 
@@ -63,60 +56,28 @@ BEGIN
 
     -- stops when the whole N = n*m values are aqcuired
     ------------------------------------------------------------
-
-          
-    PROCESS(clk) 
-    VARIABLE i : integer := 0;
-    VARIABLE j : integer := 0;
-    variable acquired_new : signed(31 downto 0);
-    VARIABLE counter : integer := 0;
-    BEGIN 
-    IF (rising_edge(clk)) THEN 
-
-              IF (i < collumns) THEN
-              
-                    IF(j  <= rows) THEN
-                        --write your code here..
-                        acquired_new := signed(x"00000" & NEW_VALUE);
-                        acquire_matrix(j)(i) <= (signed(acquired_new),x"00000000");      --acquired value (Acquired value,0);                                   
-                        j:=j+1; 
-                                                                                                                       --increment the pointer 'j' .
-                    END IF; 
-            
-                    IF(j= rows) THEN
-                        i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
-                        j:=0;    --reset j to zero.
-                    END IF;  
-                                 
-                    IF ((j= rows) AND (i = collumns)) THEN
-                        i := 0;
-                        j := 0;    
-                                       
-                    END IF;                                  
-            END IF; 
-            
-            
-        counter := counter +1;
-        if (counter = 12) then
-            counter := 0;
-            ACQUIRE_FINAL <= '1';
-        end if;
-            
-    END IF;    
-    
-    END PROCESS;
-
-
+-- TER CONTADOR EM CONTA **************************************************************+
     PROCESS(clk) IS 
     variable counter_total_aux : integer := 0; 
     BEGIN
+        if (RESET = '1' ) then
+            counter_total_aux := 0;
+            State <= ACQUIRE_VALUES;
+            state_at <= 0;                                        
+
+        else 
+        IF rising_edge(CLK) THEN
         counter_total_aux := counter_total_aux+1;
         counter_total <= counter_total_aux;
         
-        IF rising_edge(CLK) and ACQUIRE_FINAL = '1' and ALGO_FINAL /= '1' THEN
-        
                    CASE State IS                                                             
                             -- Calcula a DFT de cada linha
+                             WHEN ACQUIRE_VALUES =>
+                                state_at <= 0;
+                                IF counter_total = 11 THEN                              
+                                    State <= ROWS_DFT; 
+                                END IF;
+ 
                             WHEN ROWS_DFT =>
                                 State <= MULTIPLY_TWIDDLES; 
                                 state_at <= 1;   
@@ -134,32 +95,76 @@ BEGIN
                             -- Calcula a DFT de cada coluna
                             WHEN COLLUM_DFT =>                                          
                                 --OUTPUT_START <= '1';
-                                State <= ROWS_DFT;
-                               state_at <= 4;                                       
+                               State <= OUTPUT_VALUES;
+                               state_at <= 4;     
+                               
+                             WHEN OUTPUT_VALUES =>                                          
+                                --OUTPUT_START <= '1';
+                               state_at <= 5;  
+                              IF  counter_total = 27 then
+                                  State <= ACQUIRE_VALUES;
+                                  counter_total_aux := 0;
+                              END IF;                              
+                                                                 
                      END CASE;  
                      
             
             END IF;
+            end if; -- reset
     END PROCESS;
     
-        PROCESS(clk)
-        -- variavel que guarda um coluna de uma matriz de valores pre calculados
-        VARIABLE auxiliary_collumn : VECTOR_ROW;
-        -- variavel que guarda um linha de uma matriz de valores pre calculados
-        VARIABLE auxiliary_row     : VECTOR_COLLUMN;
-        -- variavel que guarda o valor de uma coluna da matriz principal
-        VARIABLE AUX_collumn_from_acquire_matrix : VECTOR_ROW; 
-        Variable counter : integer:= 0;
-        
- 
-    BEGIN                                                             
-      
-        IF rising_edge(clk) and ACQUIRE_FINAL = '1' then
-        
-      counter := counter +1;
+    
+             
+    PROCESS(clk) 
+    VARIABLE i : integer := 0;
+    VARIABLE j : integer := 0;
+    variable acquired_new : std_logic_vector(31 downto 0);
+    BEGIN 
+    if (reset = '1') then
+        i := 0;
+        j := 0;
+        acquire_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000")));
+    else 
+    IF (rising_edge(clk)) THEN 
+    
+        IF state = ACQUIRE_VALUES then 
+              IF (i < collumns) THEN
+                    IF(j  <= rows) THEN
+                        --write your code here.. 
+                         acquire_matrix(j)(i) <= (signed(x"00000" & NEW_VALUE),x"00000000");      --acquired value (Acquired value,0);                                   
+                        j:=j+1; 
+                                                                                                                       --increment the pointer 'j' .
+                    END IF; 
+            
+                    IF(j= rows) THEN
+                        i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
+                        j:=0;    --reset j to zero.
+                    END IF;  
+                                 
+                    IF  (i = collumns)THEN
+                        i := 0;
+                        j := 0;                                          
+                    END IF;                                  
+            END IF;            
+        END IF;  
+    END IF;
+    end if;
+    END PROCESS;
 
-        
-        
+
+
+    PROCESS(clk)
+       Variable counter : integer := 0;
+    BEGIN                                                             
+     if reset = '1' then 
+        counter := 0;
+        initial_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000")));
+        out_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000")));
+
+     
+     else
+        IF rising_edge(clk) then      
+        counter := counter +1;
         IF(state = ROWS_DFT) THEN
             FOR i IN 0 TO rows-1 LOOP   
                 FOR j IN 0 TO collumns-1 LOOP  
@@ -203,22 +208,13 @@ BEGIN
                 END LOOP;
             END LOOP ;                  
         END IF;
+
+        end if;
         
-        if (counter = 4) then
-            counter := 0;
-            ALGO_FINAL <= '1';
         end if;
-        end if;
-    
-         
         END PROCESS; 
         
-   
-    
-    
-    
-    
-    
+
     
     
    PROCESS(clk) 
@@ -230,8 +226,11 @@ BEGIN
  
     BEGIN        
 
-            IF (rising_edge(clk)) and ALGO_FINAL = '1' THEN 
-                        
+            IF (rising_edge(clk)) and state = OUTPUT_VALUES THEN 
+                if reset = '1' then
+                    OUT_VALUE_REAL <=x"00000000";
+                
+                else        
 
        --OUTPUT_FINAL <= '0';
                 IF (i < rows) THEN
@@ -247,39 +246,14 @@ BEGIN
                         j:=0;    --reset j to zero.
                     END IF;
                     
-                     IF(j= collumns AND i = rows) THEN
+                     IF i = rows-1 THEN
                         i := 0;
                         j := 0;                        
                     END IF;
                 END IF;   
-    
-    
-            counter := counter +1;
-            if (counter = 12) then
-                counter := 0;
-                OUTPUT_FINAL <= '1';
-                
-            end if;
         END IF;   
-        
+        END IF;
     END PROCESS;
-    
-    
-    
-      
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

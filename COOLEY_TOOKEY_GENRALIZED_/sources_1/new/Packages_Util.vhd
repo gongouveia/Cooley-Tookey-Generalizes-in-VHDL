@@ -44,33 +44,24 @@ package Packages_Util is
     ----------------------------------------------------------
     ------           Pre Computed Matrix               -------
     ----------------------------------------------------------
-    -- os valores estão calculados em 2s complement 
-    
-    
-    -- Constant twiddle factors
-    -- VAlores para o passo intermedio de fazer o produro de ponto a ponto
-    CONSTANT twiddle_matrix : MATRIX :=
-    (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
-    ((x"00000fff",x"00000000"),(x"00000dda",x"fffff801"),(x"00000800",x"fffff226"),(x"00000000",x"fffff001")),
-    ((x"00000fff",x"00000000"),(x"00000800",x"fffff226"),(x"fffff801",x"fffff226"),(x"fffff001",x"00000000"))
-    );
+    -- os valores estão calculados em 2s complement " 
+CONSTANT twiddle_matrix : MATRIX :=
+ (((x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000")),
+((x"00001000",x"00000000"),(x"00000ddb",x"fffff800"),(x"00000800",x"fffff225"),(x"00000000",x"fffff000")),
+((x"00001000",x"00000000"),(x"00000800",x"fffff225"),(x"fffff800",x"fffff225"),(x"fffff000",x"00000000"))
+);
 
-    -- VAlores para o passo de DFT de linhas
-    CONSTANT collumn_dft_matrix_values : ROW_MATRIX :=
-    (((x"00000fff",x"00000000"),(x"00000fff",x"00000000"),(x"00000fff",x"00000000")),
-    ((x"00000fff",x"00000000"),(x"fffff801",x"fffff226"),(x"fffff800",x"00000dda")),
-    ((x"00000fff",x"00000000"),(x"fffff800",x"00000dda"),(x"fffff801",x"fffff226")));
+CONSTANT collumn_dft_matrix_values : ROW_MATRIX :=
+ (((x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000")),
+((x"00001000",x"00000000"),(x"fffff800",x"fffff225"),(x"fffff800",x"00000ddb")),
+((x"00001000",x"00000000"),(x"fffff800",x"00000ddb"),(x"fffff800",x"fffff225")));
 
-  
-         -- VAlores para o passo de DFT de colunas
-    CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=      
-      (((x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000")),
-    ((x"00001000",x"00000000"),(x"00000000",x"fffff000"),(x"fffff000",x"00000000"),(x"00000000",x"00001000")),
-    ((x"00001000",x"00000000"),(x"fffff000",x"00000000"),(x"00001000",x"00000000"),(x"fffff000",x"00000000")),
-    ((x"00001000",x"00000000"),(x"00000000",x"00001000"),(x"fffff000",x"00000000"),(x"00000000",x"fffff000"))); 
-    
-    
-    
+
+CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
+ (((x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000"),(x"00001000",x"00000000")),
+((x"00001000",x"00000000"),(x"00000000",x"fffff000"),(x"fffff000",x"00000000"),(x"00000000",x"00001000")),
+((x"00001000",x"00000000"),(x"fffff000",x"00000000"),(x"00001000",x"00000000"),(x"fffff000",x"00000000")),
+((x"00001000",x"00000000"),(x"00000000",x"00001000"),(x"fffff000",x"00000000"),(x"00000000",x"fffff000")));
     -------------------------------------------------------
     ------        Deslaração de Funções             -------
     -------------------------------------------------------
@@ -201,7 +192,6 @@ package Packages_Util is
     
     
     
-    -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TESTADO
     FUNCTION transpose(a : matrix) return MATRIX_transpose is
     VARIABLE transposed_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
     
@@ -216,5 +206,3 @@ package Packages_Util is
  
     
 END package body Packages_Util;
-
-
