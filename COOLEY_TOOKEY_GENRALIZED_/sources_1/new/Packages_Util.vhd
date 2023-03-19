@@ -176,14 +176,10 @@ CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
     VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
     BEGIN
     
-        -- makes the product of the factors
-        for i in 0 to VECTOR_ROW'length-1 loop --(number of elements in the first matrix - 1)
-            prod(i) :=  ComplexMult(a(i), b(i));
-         end loop;
-         
+    
          -- sum of products
          for j in 0 to VECTOR_ROW'length -1 loop
-            sum_of_prod := complexSUM(sum_of_prod, prod(j));
+            sum_of_prod := complexSUM(sum_of_prod, ComplexMult(a(j), b(j)));
          end loop;
          
     -- Return the dot product value

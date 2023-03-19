@@ -58,7 +58,7 @@ architecture bench of CTG_tb is
       begin
             
              NEW_VALUE <=  x"aaa";
-             wait for 3*clock_period;
+             wait for 12*clock_period;
              RESET <= '1';
              wait for 3*clock_period;
              NEW_VALUE <=  x"fff";
@@ -139,8 +139,49 @@ architecture bench of CTG_tb is
             NEW_VALUE <=  x"fff";
             wait for clock_period;
             NEW_VALUE <=  x"2ff";
-            wait for clock_period;           
-        
+            wait for clock_period;
+            NEW_VALUE <=  x"412";
+            wait for clock_period;
+            NEW_VALUE <=  x"513";
+            wait for clock_period;
+            NEW_VALUE <=  x"0ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"fff";
+            wait for clock_period;
+            NEW_VALUE <=  x"2ff";
+            
+            wait for clock_period;
+            NEW_VALUE <=  x"fff";
+            wait for clock_period;
+            NEW_VALUE <=  x"0ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"fff";
+            wait for clock_period;
+            NEW_VALUE <=  x"2ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"213";
+            wait for clock_period;
+            NEW_VALUE <=  x"2ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"412";
+            wait for clock_period;
+            NEW_VALUE <=  x"513";
+            wait for clock_period;
+            NEW_VALUE <=  x"0ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"fff";
+            wait for clock_period;
+            NEW_VALUE <=  x"2ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"412";
+            wait for clock_period;
+            NEW_VALUE <=  x"513";
+            wait for clock_period;
+            NEW_VALUE <=  x"0ff";
+            wait for clock_period;
+            NEW_VALUE <=  x"fff";
+            wait for clock_period;
+            NEW_VALUE <=  x"2ff";
       end process;
     
      

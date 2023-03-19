@@ -74,34 +74,44 @@ BEGIN
                             -- Calcula a DFT de cada linha
                              WHEN ACQUIRE_VALUES =>
                                 state_at <= 0;
-                                IF counter_total = 11 THEN                              
+                                IF counter_total = rows*collumns-1 THEN                              
                                     State <= ROWS_DFT; 
                                 END IF;
  
                             WHEN ROWS_DFT =>
                                 State <= MULTIPLY_TWIDDLES; 
-                                state_at <= 1;   
+                                state_at <= 1;
+                                 
                                      
                             -- Multiplica a matriz anterior pelos twiddle factors   
                             WHEN MULTIPLY_TWIDDLES =>   
-                                State <= TRANSPOSE_step;  
-                                state_at <= 2;     
+                                state_at <= 2; 
+                                if counter_total = 2*rows*collumns then
+                                    state <= TRANSPOSE_step;
+                                
+                                end if; 
                                                                    
                               -- Multiplica a matriz anterior pelos twiddle factors   
                             WHEN TRANSPOSE_step =>   
-                                State <= COLLUM_DFT;  
-                                state_at <= 3;                                        
+                                state_at <= 3;  
+                                 if counter_total = 3*rows*collumns then
+                                    state <= COLLUM_DFT;
+                                
+                                end if;
                                                                                    
                             -- Calcula a DFT de cada coluna
                             WHEN COLLUM_DFT =>                                          
                                 --OUTPUT_START <= '1';
-                               State <= OUTPUT_VALUES;
-                               state_at <= 4;     
+                               --State <= OUTPUT_VALUES;
+                               state_at <= 4;  
+                                IF  counter_total = 4*rows*collumns then
+                                  State <= OUTPUT_VALUES;
+                                END IF;    
                                
                              WHEN OUTPUT_VALUES =>                                          
                                 --OUTPUT_START <= '1';
-                               state_at <= 5;  
-                              IF  counter_total = 27 then
+                              state_at <= 5;  
+                              IF  counter_total = 5*rows*collumns then
                                   State <= ACQUIRE_VALUES;
                                   counter_total_aux := 0;
                               END IF;                              
@@ -129,7 +139,7 @@ BEGIN
     
         IF state = ACQUIRE_VALUES then 
               IF (i < collumns) THEN
-                    IF(j  <= rows) THEN
+                    IF(j  < rows) THEN
                         --write your code here.. 
                          acquire_matrix(j)(i) <= (signed(x"00000" & NEW_VALUE),x"00000000");      --acquired value (Acquired value,0);                                   
                         j:=j+1; 
@@ -154,17 +164,23 @@ BEGIN
 
 
     PROCESS(clk)
-       Variable counter : integer := 0;
+       Variable i : integer := 0;
+       Variable j : integer := 0;
+       VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
+       variable auxiliary_vector : VECTOR_COLLUMN := (others => (others => x"00000000"));
+       VARIABLE auxiliary_out_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000")));
+       
     BEGIN                                                             
      if reset = '1' then 
-        counter := 0;
         initial_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000")));
         out_matrix <= (OTHERS => (OTHERS => (x"00000000", x"00000000")));
-
+        sum_of_prod := (x"00000000",x"00000000");
      
      else
+     
+   
+     
         IF rising_edge(clk) then      
-        counter := counter +1;
         IF(state = ROWS_DFT) THEN
             FOR i IN 0 TO rows-1 LOOP   
                 FOR j IN 0 TO collumns-1 LOOP  
@@ -174,44 +190,92 @@ BEGIN
             END LOOP ;      
         END IF;
         
-                  
-        IF(state = MULTIPLY_TWIDDLES) THEN     
-            FOR i IN 0 TO rows-1 LOOP                       
-                FOR j IN 0 TO collumns-1 LOOP                      
-                     --This is being done in parallel
-                    initial_matrix(i)(j)<=  ComplexMULT(initial_matrix(i)(j),twiddle_matrix(i)(j));
-                END LOOP;
-            END LOOP ;      
+        
+        IF state = MULTIPLY_TWIDDLES then 
+              IF (i < rows) THEN
+                    IF(j  < collumns) THEN
+                        --write your code here.. 
+                        initial_matrix(i)(j)<=  ComplexMULT(initial_matrix(i)(j),twiddle_matrix(i)(j));      --acquired value (Acquired value,0);                                   
+                        j:=j+1; 
+                                                                                                                       --increment the pointer 'j' .
+                    END IF; 
+            
+                    IF(j= collumns) THEN
+                        i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
+                        j:=0;    --reset j to zero.
+                    END IF;  
+                                 
+                    IF  (i = rows)THEN
+                        i := 0;
+                        j := 0;                                          
+                    END IF;                                  
+            END IF;            
         END IF;  
        
        
-        IF(state = TRANSPOSE_step) THEN
-         -- itera por cada coluna
-            FOR i IN 0 TO collumns-1 LOOP 
-                -- por cada linha                      
-                FOR j IN 0 TO rows-1 LOOP      
-                   out_matrix   <= transpose(initial_matrix);    
-                END LOOP;
-            END LOOP ; 
-        END IF;
-        
-        
-        IF(state = COLLUM_DFT) THEN
-         -- itera por cada coluna
-            FOR i IN 0 TO collumns-1 LOOP 
-                -- por cada linha                      
-                FOR j IN 0 TO rows-1 LOOP   
-  
-                   out_matrix(i)(j) <= dot_product_collumn(out_matrix(i), collumn_dft_matrix_values(j));
+        IF state = TRANSPOSE_step then 
+              IF (i < rows) THEN
+                    IF(j  < collumns) THEN
+                        --write your code here.. 
+                        out_matrix(j)(i)<=  initial_matrix(i)(j);      --acquired value (Acquired value,0);                                   
+                        auxiliary_out_matrix(j)(i) := initial_matrix(i)(j);  
+                                      
+   
+                        j:=j+1; 
+                                                                                                                       --increment the pointer 'j' .
+                    END IF; 
+            
+                    IF(j= collumns) THEN
+                        i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
+                        j:=0;    --reset j to zero.
+                    END IF;  
+                                 
+                    IF  (i = rows)THEN
+                        i := 0;
+                        j := 0; 
+                    END IF;                                  
+            END IF;            
+        END IF;  
 
-                  -- out_matrix   <= transpose(initial_matrix);    
-                END LOOP;
-            END LOOP ;                  
+        
+        IF state = COLLUM_DFT then 
+              IF (i < ROWS) THEN
+                    IF(j  < ROWS) THEN
+                        --write your code here.. 
+                        
+                        for x in  0 to collumns-1 loop
+                        auxiliary_vector(x) := ComplexSum( auxiliary_vector(x) , ComplexMULT(auxiliary_out_matrix(x)(j),collumn_dft_matrix_values(i)(j)));
+                        out_matrix(x)(i) <= auxiliary_vector(x);
+     
+                                            
+                          end loop;
+                        j:=j+1; 
+                   -- increment the pointer 'j' .
+                    END IF; 
+            
+                    IF(j= ROWS) THEN
+                    
+                        for k in 0 to collumns-1 loop
+                            auxiliary_vector(k) := (x"00000000", x"00000000");                    
+                        end loop;
+
+                        i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
+                        j:=0;    --reset j to zero.
+                    END IF;  
+                                 
+                    IF  (i = rows)THEN                  
+                        for k in 0 to collumns-1 loop
+                            auxiliary_vector(k) := (x"00000000", x"00000000");
+                        end loop;
+                        i := 0;
+                        j := 0;                                          
+                    END IF;                                  
+            END IF;            
         END IF;
 
-        end if;
-        
-        end if;
+        END IF;
+
+        end if;    
         END PROCESS; 
         
 
@@ -222,14 +286,14 @@ BEGIN
     -- são apenas acedidas dentro deste processo e evitam multiple driving nets
     VARIABLE i : integer := 0;   
     VARIABLE j : integer := 0;
-    VARIABLE counter : integer := 0;
  
     BEGIN        
 
             IF (rising_edge(clk)) and state = OUTPUT_VALUES THEN 
                 if reset = '1' then
                     OUT_VALUE_REAL <=x"00000000";
-                
+                    OUT_VALUE_IMAG <=x"00000000";
+               
                 else        
 
        --OUTPUT_FINAL <= '0';
@@ -246,7 +310,7 @@ BEGIN
                         j:=0;    --reset j to zero.
                     END IF;
                     
-                     IF i = rows-1 THEN
+                     IF i = rows THEN
                         i := 0;
                         j := 0;                        
                     END IF;
