@@ -14,8 +14,8 @@ create_clock -period 100.000 -name sys_clk_pin -waveform {0.000 50.000} -add [ge
 #set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS33 } [get_ports { sw[3] }]; #IO_L14P_T2_SRCC_16 Sch=sw[3]
 
 ## RGB LEDs
-set_property -dict {PACKAGE_PIN E1 IOSTANDARD LVCMOS33} [get_ports OUT_VALUE]
-#set_property -dict { PACKAGE_PIN F6    IOSTANDARD LVCMOS33 } [get_ports { led0_g }]; #IO_L19N_T3_VREF_35 Sch=led0_g
+set_property -dict {PACKAGE_PIN E1 IOSTANDARD LVCMOS33} [get_ports OUT_VALUE_REAL]
+set_property -dict { PACKAGE_PIN F6    IOSTANDARD LVCMOS33 } [get_ports { OUT_VALUE_IMAG }]; #IO_L19N_T3_VREF_35 Sch=led0_g
 #set_property -dict { PACKAGE_PIN G6    IOSTANDARD LVCMOS33 } [get_ports { led0_r }]; #IO_L19P_T3_35 Sch=led0_r
 #set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { led1_b }]; #IO_L20P_T3_35 Sch=led1_b
 #set_property -dict { PACKAGE_PIN J4    IOSTANDARD LVCMOS33 } [get_ports { led1_g }]; #IO_L21P_T3_DQS_35 Sch=led1_g

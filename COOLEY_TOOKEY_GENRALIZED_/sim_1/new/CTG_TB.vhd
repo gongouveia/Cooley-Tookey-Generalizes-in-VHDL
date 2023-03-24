@@ -4,6 +4,8 @@ use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_Std.all;
 use work.Packages_Util.all;
 
+use std.textio.all;
+
 entity CTG_tb is
 end;
 
@@ -54,14 +56,40 @@ architecture bench of CTG_tb is
                       counter_total => counter_total
                      );
     
+   
+    
+    
+    
+    
+    
+    
       stimulus: process
+      
+        file Fin : text open READ_MODE  is "datain.txt";
+    
+        variable current_read_line : line;
+        variable current_read_field : std_logic_vector(12 downto 0);
+        
       begin
             
+            
+--            while (not endfile(Fin)) loop
+--            
+--                readline(Fin, current_read_line);
+--                read(current_read_line, current_read_field);
+--                
+--                NEW_VALUE <=  current_read_field;
+--                wait for clock_period;
+
+--            end loop;
+            
+            
+            
+            
              NEW_VALUE <=  x"aaa";
-             wait for 12*clock_period;
-             RESET <= '1';
+             --wait for 12*clock_period;
+--RESET <= '0';
              wait for 3*clock_period;
-             NEW_VALUE <=  x"fff";
              RESET <='0';            
       
              NEW_VALUE <=  x"fff";
@@ -195,4 +223,3 @@ architecture bench of CTG_tb is
             wait for clock_period/2;
         end process;
     end;
-      
