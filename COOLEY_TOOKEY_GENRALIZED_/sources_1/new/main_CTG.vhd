@@ -185,15 +185,7 @@ BEGIN
         if rising_edge(clk) then
          auxiliar_acquire_matrix <= acquire_matrix;
      
---        IF rising_edge(clk) then      
---        IF(state = ROWS_DFT) THEN
---            FOR i IN 0 TO rows-1 LOOP   
---                FOR j IN 0 TO collumns-1 LOOP  
---                    -- extrai os valores de uma linha da matriz de valores pre calculados para a DFT da linha
---                    initial_matrix(i)(j) <= dot_product_row(acquire_matrix(i), row_dft_matrix_values(j));
---                END LOOP;
---            END LOOP ;      
---        END IF;
+
         
         IF state = ROWS_DFT then 
               IF (i < collumns) THEN
