@@ -97,20 +97,7 @@ CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
 	FUNCTION ComplexMULT (ValueA, ValueB: Complex_Type) RETURN Complex_Type;
 	------------------------------------------------
 	
-	-- Dot product of two vectors with same size
-	----------------------------------------------
-    FUNCTION dot_product_row( a : VECTOR_COLLUMN; b:VECTOR_COLLUMN ) return Complex_Type;
-    ----------------------------------------------
-    
-    
-    ----------------------------------------------
-    FUNCTION dot_product_collumn(a : VECTOR_ROW; b:VECTOR_ROW) return complex_type;
-    ----------------------------------------------
 
-
-    ----------------------------------------------
-    FUNCTION transpose(a : matrix) return MATRIX_transpose;
-    ----------------------------------------------
 
 	
       end package Packages_Util;
@@ -168,62 +155,5 @@ CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
         RETURN Result;
     END ComplexMult;
 	
-	
-	----------------TESTADO
-	-- calcula a soma dos produtos pontoa  ponto 
-    FUNCTION dot_product_row(a : VECTOR_COLLUMN; b:VECTOR_COLLUMN) return complex_type is
-        VARIABLE prod : VECTOR_COLLUMN := (others => (others => x"00000000"));
-        VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
-        BEGIN
-        
-            -- makes the product of the factors
-            for i in 0 to VECTOR_COLLUMN'length-1 loop --(number of elements in the first matrix - 1)
-                prod(i) :=  ComplexMult(a(i), b(i));
-             end loop;
-             
-             -- sum of products
-             for j in 0 to VECTOR_COLLUMN'length -1 loop
-                sum_of_prod := complexSUM(sum_of_prod, prod(j));
-             end loop;
-             
-    -- Return the dot product value
-    RETURN sum_of_prod;
-    END dot_product_row;
-    
-        
-    FUNCTION dot_product_collumn(a : VECTOR_ROW; b:VECTOR_ROW) return complex_type is
-    VARIABLE prod : VECTOR_ROW := (others => (others => x"00000000"));
-    VARIABLE sum_of_prod : complex_type  := (x"00000000",x"00000000");
-    BEGIN
-    
-        -- makes the product of the factors
-        for i in 0 to VECTOR_ROW'length-1 loop --(number of elements in the first matrix - 1)
-            prod(i) :=  ComplexMult(a(i), b(i));
-         end loop;
-         
-         -- sum of products
-         for j in 0 to VECTOR_ROW'length -1 loop
-            sum_of_prod := complexSUM(sum_of_prod, prod(j));
-         end loop;
-         
-    -- Return the dot product value
-    RETURN sum_of_prod;
-    END dot_product_collumn;
-    
-    
-    
-    -- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX TESTADO
-    FUNCTION transpose(a : matrix) return MATRIX_transpose is
-    VARIABLE transposed_matrix : MATRIX_transpose := (OTHERS => (OTHERS => (x"00000000", x"00000000"))); 
-    
-    begin
-        for i in 0 to rows-1 loop --(number of elements in the first matrix - 1)
-            for j in 0 to collumns-1 loop --(number of elements in the first matrix - 1)
-                transposed_matrix(j)(i) := a(i)(j);
-            end loop;
-        end loop;
-        return transposed_matrix;
-    end function;
- 
     
 END package body Packages_Util;
