@@ -3,7 +3,7 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.ALL;      -- going to use to convert std vector to unsigned
 
 
--- Package Declaration Section
+-- Package Declaration Section-0.02112+0.j
 package Packages_Util is
     
     
@@ -98,7 +98,6 @@ CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
 	------------------------------------------------
 	
 
-
 	
       end package Packages_Util;
        
@@ -155,5 +154,6 @@ CONSTANT row_dft_matrix_values : COLLUMN_MATRIX :=
         RETURN Result;
     END ComplexMult;
 	
+ 
     
 END package body Packages_Util;

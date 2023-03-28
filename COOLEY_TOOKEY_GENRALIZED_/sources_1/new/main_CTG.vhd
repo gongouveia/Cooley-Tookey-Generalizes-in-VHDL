@@ -6,7 +6,7 @@ USE ieee.numeric_std.ALL;      -- going to use to convert std vector to unsigned
 use work.Packages_Util.all;
 
 
-
+-- Top level entity
 ENTITY CTG IS
     Port (
         CLK : IN  STD_LOGIC;
@@ -49,14 +49,7 @@ ARCHITECTURE Behavioral OF CTG IS
 
 BEGIN
 
-    ------------------------------------------------------------
-    -- acquire a value at each clock cycle
-    --adapted from:
-                    --https://vhdlguru.blogspot.com/2010/03/how-to-do-clocked-for-loop.html
-
-    -- stops when the whole N = n*m values are aqcuired
-    ------------------------------------------------------------
--- TER CONTADOR EM CONTA **************************************************************+
+    -- FInite State machine, flow of the program
     PROCESS(clk) IS 
     variable counter_total_aux : integer := 0; 
     BEGIN
@@ -127,7 +120,9 @@ BEGIN
     END PROCESS;
     
     
-             
+    -- AQcquisition values process..
+    -- If we want to acquire values form SPI change the line "IF (rising_edge(clk))" THEN  for the acquisition protcol clock
+          
     PROCESS(clk) 
     VARIABLE i : integer := 0;
     VARIABLE j : integer := 0;
@@ -185,14 +180,12 @@ BEGIN
         if rising_edge(clk) then
          auxiliar_acquire_matrix <= acquire_matrix;
      
-
-        
         IF state = ROWS_DFT then 
               IF (i < collumns) THEN
                     IF(j  < collumns) THEN
                         --write your code here.. 
                         
-                        for x in  0 to rows-1 loop
+                        for x in  0 to rows-1 loop                                                                   -- row
                             auxiliary_vector(x) := ComplexSum( auxiliary_vector(x) , ComplexMULT(acquire_matrix(x)(j),row_dft_matrix_values(i)(j)));
                             initial_matrix(x)(i) <= auxiliary_vector(x);                  
                           end loop;
@@ -220,7 +213,7 @@ BEGIN
             END IF;            
         END IF;       
         
-        
+        -- Multiply the data matrix by a point-to-point twiddle factor matrix
         IF state = MULTIPLY_TWIDDLES then 
               IF (i < rows) THEN
                     IF(j  < collumns) THEN
@@ -237,23 +230,23 @@ BEGIN
                                  
                     IF  (i = rows)THEN
                         i := 0;
-                        j := 0;                                          
+                        j := 0;  
+                        -- Finishes this process                                        
                     END IF;                                  
             END IF;            
         END IF;  
        
+       
+       -- Transpose the data matrix so that we can perfom the collumn matrix DFT
         IF state = TRANSPOSE_step then 
               IF (i < rows) THEN
                     IF(j  < collumns) THEN
                         --write your code here.. 
                         out_matrix(j)(i)<=  initial_matrix(i)(j);      --acquired value (Acquired value,0);                                   
-                        auxiliary_out_matrix(j)(i) := initial_matrix(i)(j);  
-                                      
-   
+                        auxiliary_out_matrix(j)(i) := initial_matrix(i)(j);                                      
                         j:=j+1; 
-                                                                                                                       --increment the pointer 'j' .
-                    END IF; 
-            
+                                                                                                        --increment the pointer 'j' .
+                    END IF;  
                     IF(j= collumns) THEN
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
@@ -264,42 +257,37 @@ BEGIN
                     IF  (i = rows)THEN
                         i := 0;
                         j := 0; 
+                        -- end process
                     END IF;                                  
             END IF;            
         END IF;  
 
-        
+        -- Perform the DFT of the rows of the new matrix 
         IF state = COLLUM_DFT then 
               IF (i < ROWS) THEN
                     IF(j  < ROWS) THEN
-                        --write your code here.. 
-                        
-                        for x in  0 to collumns-1 loop
-                        auxiliary_vector(x) := ComplexSum( auxiliary_vector(x) , ComplexMULT(auxiliary_out_matrix(x)(j),collumn_dft_matrix_values(i)(j)));
-                        out_matrix(x)(i) <= auxiliary_vector(x);
-     
-                                            
-                          end loop;
+                        --write your code here..                  
+                        for x in  0 to collumns-1 loop                        
+                            auxiliary_vector(x) := ComplexSum( auxiliary_vector(x) , ComplexMULT(auxiliary_out_matrix(x)(j),collumn_dft_matrix_values(i)(j)));
+                            out_matrix(x)(i) <= auxiliary_vector(x);                                       
+                        end loop;
                         j:=j+1; 
                    -- increment the pointer 'j' .
-                    END IF; 
-            
-                    IF(j= ROWS) THEN
-                    
+                    END IF;            
+                    IF(j= ROWS) THEN                  
                         for k in 0 to collumns-1 loop
                             auxiliary_vector(k) := (x"00000000", x"00000000");                    
                         end loop;
-
                         i:=i+1;   --increment the pointer 'i' when j reaches its maximum value.
                         j:=0;    --reset j to zero.
-                    END IF;  
-                                 
+                    END IF;                                 
                     IF  (i = ROWS)THEN                  
                         for k in 0 to collumns-1 loop
                             auxiliary_vector(k) := (x"00000000", x"00000000");
                         end loop;
                         i := 0;
-                        j := 0;                                          
+                        j := 0;   
+                        -- end process                                       
                     END IF;                                  
             END IF;            
         END IF;
@@ -310,6 +298,8 @@ BEGIN
         
 
     
+    -- Output values process..
+    -- If we want to output values form XX protocol change the line "IF (rising_edge(clk)) THEN"  for the chosen protcol clock
     
    PROCESS(clk) 
     
@@ -326,7 +316,7 @@ BEGIN
                
                 else        
 
-       --OUTPUT_FINAL <= '0';
+                --OUTPUT_FINAL <= '0';
                 IF (i < rows) THEN
                     IF(j  < collumns) THEN        
                         --write your code architecture                              
